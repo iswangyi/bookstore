@@ -3,26 +3,26 @@ package handler
 import (
 	"net/http"
 
-	"bookstore/internal/logic"
-	"bookstore/internal/svc"
-	"bookstore/internal/types"
+	"bookstore/api/internal/logic"
+	"bookstore/api/internal/svc"
+	"bookstore/api/internal/types"
 	"github.com/tal-tech/go-zero/rest/httpx"
 )
 
-func CreateUserHandler(ctx *svc.ServiceContext) http.HandlerFunc {
+func AddHandler(ctx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var req types.Request
+		var req types.AddReq
 		if err := httpx.Parse(r, &req); err != nil {
 			httpx.Error(w, err)
 			return
 		}
 
-		l := logic.NewCreateUserLogic(r.Context(), ctx)
-		err := l.CreateUser(req)
+		l := logic.NewAddLogic(r.Context(), ctx)
+		resp, err := l.Add(req)
 		if err != nil {
 			httpx.Error(w, err)
 		} else {
-			httpx.Ok(w)
+			httpx.OkJson(w, resp)
 		}
 	}
 }
